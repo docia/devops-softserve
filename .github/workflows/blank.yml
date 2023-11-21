@@ -46,3 +46,17 @@ jobs:
 
       - name: Build Project
         run: npm run
+        
+      - name: Create new branch
+        run: |
+            git checkout -b ${{ github.event.inputs.new-branch }}
+            git add .
+            git commit -m "Update project code"
+            git push origin ${{ github.event.inputs.new-branch }}
+    
+      - name: Create Pull Request
+        run: |
+          gh pr create --title "Update project code" --body "Auto-generated PR" --base main --head ${{ github.event.inputs.new-branch }}
+
+      - name: Merge Pull Request
+        run: gh pr merge --auto --merge
